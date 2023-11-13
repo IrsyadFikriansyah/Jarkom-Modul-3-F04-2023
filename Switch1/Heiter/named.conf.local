@@ -6,19 +6,12 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-zone "arjuna.f04.com" {
-    type slave;
-    masters { 192.223.2.2; }; // IP Yudhistira
-    file "/var/lib/bind/arjuna.f04.com";
-};
-
-zone "abimanyu.f04.com" {
-    type slave;
-    masters { 192.223.2.2; }; // IP Yudhistira
-    file "/var/lib/bind/abimanyu.f04.com";
-};
-
-zone "baratayuda.abimanyu.f04.com" {
+zone "granz.channel.f04.com" {
     type master;
-    file "/etc/bind/baratayuda/baratayuda.abimanyu.f04.com";
+    file "/etc/bind/baratayuda/granz.channel.f04.com";
+};
+
+zone "riegel.canyon.f04.com" {
+    type master;
+    file "/etc/bind/baratayuda/riegel.canyon.f04.com";
 };
