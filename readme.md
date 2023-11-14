@@ -142,6 +142,16 @@ max-lease-time 7200;
 authoritative;
 log-facility local7;
 
+# eth1
+subnet 192.223.1.0 netmask 255.255.255.0 {
+  option routers 192.223.1.1;
+}
+
+# eth2
+subnet 192.223.2.0 netmask 255.255.255.0 {
+  option routers 192.223.2.1;
+}
+
 # eth3
 subnet 192.223.3.0 netmask 255.255.255.0 {
     range 192.223.3.16 192.223.3.32;
