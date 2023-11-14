@@ -1,0 +1,24 @@
+Router:
+Aura telnet 172.16.32.128 5035
+
+Switch 1:
+Himmel telnet 172.16.32.128 5029
+Heiter telnet 172.16.32.128 5027
+
+Switch 2:
+Denken telnet 172.16.32.128 5033
+Eisen telnet 172.16.32.128 5031
+
+Switch 3:
+Ravolte telnet 172.16.32.128 5025
+Richter telnet 172.16.32.128 5017
+Lawine telnet 172.16.32.128 5021
+Linie telnet 172.16.32.128 5019
+Lugner telnet 172.16.32.128 5023
+
+Switch 4:
+Fern telnet 172.16.32.128 5003
+Flamme telnet 172.16.32.128 5013
+Frieren telnet 172.16.32.128 5015
+Sein telnet 172.16.32.128 5009
+Stark telnet 172.16.32.128 5011

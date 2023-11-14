@@ -2,7 +2,7 @@
 
 echo 'nameserver 192.168.122.1  # IP Aura' > /etc/resolv.conf
 
-bash /root/install-script.sh
+bash /root/install_script.sh
 
 # Setting DNS
 cp /root/named.conf.local /etc/bind/named.conf.local
