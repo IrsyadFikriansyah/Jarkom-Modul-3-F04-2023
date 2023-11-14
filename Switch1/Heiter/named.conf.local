@@ -1,17 +1,9 @@
-//
-// Do any local configuration here
-//
-
-// Consider adding the 1918 zones here, if they are not used in your
-// organization
-//include "/etc/bind/zones.rfc1918";
-
 zone "granz.channel.f04.com" {
     type master;
-    file "/etc/bind/baratayuda/granz.channel.f04.com";
+    file "/etc/bind/granz/granz.channel.f04.com";
 };
 
 zone "riegel.canyon.f04.com" {
     type master;
-    file "/etc/bind/baratayuda/riegel.canyon.f04.com";
+    file "/etc/bind/riegel/riegel.canyon.f04.com";
 };

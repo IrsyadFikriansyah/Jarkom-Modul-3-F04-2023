@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'nameserver 192.168.122.1  # IP Aura' > /etc/resolv.conf
+echo 'nameserver 192.168.122.1  # IP NAT1' > /etc/resolv.conf
 
 bash /root/install_script.sh
 
