@@ -1,9 +1,8 @@
 #!/bin/bash
   
-bash /root/install_script.sh
+:1bash /root/install_script.sh
 
-cp /root/isc-dhcp-server /etc/default/isc-dhcp-server
-cp /root/dhcpd.conf /etc/dhcp/dhcpd.conf
+cp /root/isc-dhcp-relay /etc/default/isc-dhcp-relay
+cp /root/sysctl.conf /etc/sysctl.conf
 
-rm /var/run/dhcpd.pid
-service isc-dhcp-server restart
+service isc-dhcp-relay restart
