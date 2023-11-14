@@ -1,6 +1,6 @@
 #!/bin/bash
   
-:1bash /root/install_script.sh
+bash /root/install_script.sh
 
 cp /root/isc-dhcp-relay /etc/default/isc-dhcp-relay
 cp /root/sysctl.conf /etc/sysctl.conf
