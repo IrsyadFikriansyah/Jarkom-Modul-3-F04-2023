@@ -10,5 +10,5 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @           IN      NS      riegel.canyon.f04.com.
-@           IN      A       192.223.4.2 ; IP Frieren???
+@           IN      A       192.223.2.3 ; IP Eisen
 www         IN      CNAME   riegel.canyon.f04.com.
