@@ -1,0 +1,35 @@
+upstream granz {
+	server 192.223.4.2; # IP Frieren
+	server 192.223.4.3; # IP Flamme
+	server 192.223.4.4; # IP Fern
+}
+
+upstream riegel {
+	server 192.223.3.2;	# Lawine
+	server 192.223.3.3;	# Linie
+	server 192.223.3.4;	# Lugner
+}
+
+server {
+	listen 80;
+	server_name granz.channel.f04.com;
+
+	location / {
+		proxy_pass http://granz/;
+		proxy_set_header    X-Real-IP $remote_addr;
+		proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header    Host $http_host;
+	}
+}
+
+server {
+	listen 80;
+	server_name riegel.canyon.f04.com;
+
+	location / {
+		proxy_pass http://riegel/;
+		proxy_set_header    X-Real-IP $remote_addr;
+		proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header    Host $http_host;
+	}
+}
