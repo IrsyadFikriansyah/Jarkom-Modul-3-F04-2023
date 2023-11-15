@@ -17,3 +17,11 @@ if ! dpkg -l | grep -q php php-fpm; then
 else
   echo "php php-fpm is already installed."
 fi
+
+# Check if htop is installed
+if ! dpkg -l | grep -q htop; then
+  echo "htop is not installed. Installing it now..."
+  apt-get install htop -y
+else
+  echo "htop is already installed"
+fi
