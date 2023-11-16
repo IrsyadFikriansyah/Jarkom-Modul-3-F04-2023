@@ -15,9 +15,9 @@ for package in "${packages[@]}"; do
 done
 
 # Adding repository to download php8.0
-echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/sury-php.list
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/sury-php.list
 
-wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -
+wget -qO - https://packages.sury.org/php/apt.gpg | apt-key add -
 
 apt-get update > /dev/null
 
