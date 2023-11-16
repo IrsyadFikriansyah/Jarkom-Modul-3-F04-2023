@@ -182,9 +182,9 @@ Switch4
 ### Setup DHCP Server on `Himmel`
 
 1. install `isc-dhcp-server`
-2. configure `/etc/default/isc-dhcp-server`
-3. configure `/etc/dhcp/dhcpd.conf`
-4. run `service isc-dhcp-server restart`
+2. konfigurasi `/etc/default/isc-dhcp-server`
+3. konfigurasi `/etc/dhcp/dhcpd.conf`
+4. jalankan `service isc-dhcp-server restart`
 
 * `/etc/default/isc-dhcp-server`:
     ```sh
@@ -275,15 +275,15 @@ Switch4
 
 <hr style="width:60%; align:center">
 
-1. add nameserver on `/etc/resolv.conf`
+1. tambakan `nameserver` pada `/etc/resolv.conf`
 2. install `bind9`
-3. configure `/etc/bind/named.conf.local`
-4. configure `/etc/bind/named.conf.options`
-5. create new directory `/etc/bind/granz`
-6. create new directory `/etc/bind/riegel`
-7. create new config file `/etc/bind/granz/granz.channel.f04.com`
-8. create new config file `/etc/bind/riegel/riegel.canyon.f04.com`
-9. run `service bind9 restart` 
+3. konfigutasi `/etc/bind/named.conf.local`
+4. konfigutasi `/etc/bind/named.conf.options`
+5. buat directory baru `/etc/bind/granz`
+6. buat directory baru `/etc/bind/riegel`
+7. buat file config baru `/etc/bind/granz/granz.channel.f04.com`
+8. buat file config baru `/etc/bind/riegel/riegel.canyon.f04.com`
+9. jalankan `service bind9 restart` 
 
 * `/etc/resolv.conf`:
     ```sh
@@ -451,3 +451,133 @@ Switch4
 > Pada masing-masing worker PHP, lakukan konfigurasi virtual host untuk website berikut dengan menggunakan php 7.3.
 
 <hr style="width:60%; align:center">
+
+Pada tiap PHP worker:
+
+1. install `nginx php php-fpm`
+2. download file website dengan `wget` (butuh `wget` dan `unzip`)
+3. buat directory baru `/var/www/granz`
+4. copy file website yang telah di-unzip ke directory `/var/www/granz/`
+5. hapus directory default pada nginx `/etc/nginx/sites-enabled/default`
+6. buat file config baru `/etc/nginx/sites-available/granz.channel.f04`
+7. link file `/etc/nginx/sites-available/granz.channel.f04` pada `/etc/nginx/sites-enabled`
+8. jalankan `service nginx restart`
+9. jalankan `service php7.3-fpm start`
+
+* download dan unzip file dengan command berikut:
+    ```sh
+    wget --no-check-certificate "https://drive.google.com/uc?export=download&id=1ViSkRq7SmwZgdK64eRbr5Fm1EGCTPrU1" -O file
+    unzip file.zip
+    ```
+* `/etc/nginx/sites-available/granz.channel.f04`:
+    ```sh
+    server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
+
+            root /var/www/granz;
+
+            index index.html index.htm index.php;
+
+            server_name granz.channel.f04.com;
+
+            location / {
+                    try_files $uri $uri/ =404;
+            }
+
+            location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+            }
+    }
+    ```
+    
+## Soal 7
+
+> Kepala suku dari Bredt Region memberikan resource server sebagai berikut: <br>
+> a. Lawine, 4GB, 2vCPU, dan 80 GB SSD. <br>
+> b. Linie, 2GB, 2vCPU, dan 50 GB SSD. <br>
+> c. Lugner 1GB, 1vCPU, dan 25 GB SSD. <br>
+> aturlah agar Eisen dapat bekerja dengan maksimal, lalu lakukan testing dengan 1000 request dan 100 request/second.
+
+<hr style="width:60%; align:center">
+
+Untuk melakukan testing, kita dapat menggunakan `ApacheBench`. berikut adalah langkah-langkahnya:
+
+Pada salah satu client:
+
+1. install `apache2-utils`
+2. jalankan `ab -n 1000 -c 100 granz.channel.f04.com/`
+
+* hasil:
+![7](images/7.jpg)
+    
+## Soal 8
+
+> Karena diminta untuk menuliskan grimoire, buatlah analisis hasil testing dengan 200 request dan 10 request/second masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut: <br>
+> a. Nama Algoritma Load Balancer <br>
+> b. Report hasil testing pada Apache Benchmark <br>
+> c. Grafik request per second untuk masing masing algoritma. <br>
+> d. Analisis 
+ 
+<hr style="width:60%; align:center">
+
+Untuk melakukan testing, kita dapat menggunakan `ApacheBench`. berikut adalah langkah-langkahnya:
+
+Pada salah satu client:
+
+1. install `apache2-utils`
+2. jalankan `ab -n 200 -c 10 granz.channel.f04.com/`
+3. ubah algoritma lb pada node `Sein` dan ulangi langkah ke-2
+4. ulangi langkah ke-3 untuk semua algoritma load balancing
+
+#### Hasil: 
+
+Kami melakukan 10 kali percobaan untuk tiap algoritma (Round Robin, Least Connection, IP Hash, Generic Hash). Kemudian dari ke 10 percobaan yang kami lakukan, kami buat rata-rata nya yang kemudian kami bandingkan tiap algoritma. Berikut adalah graf performa tiap algoritma load balancing:
+
+![8](images/8.jpg)
+
+untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.com/document/d/1KRXqVpzQufx1s8oTjW6fgp6x9LUVNZi1pcKLPr0Z1-o/edit?usp=drive_link">ini</a>**.
+    
+## Soal 9
+
+> Dengan menggunakan algoritma Round Robin, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 100 request dengan 10 request/second, kemudian tambahkan grafiknya pada grimoire.
+ 
+<hr style="width:60%; align:center">
+
+Untuk melakukan testing, kita dapat menggunakan `ApacheBench`. berikut adalah langkah-langkahnya:
+
+Pada salah satu client:
+
+1. install `apache2-utils`
+2. jalankan `ab -n 100 -c 10 granz.channel.f04.com/`
+3. matikan worker dengan `service nginx stop` dan ulangi langkah ke-2 untuk jumlah worker 3, 2, dan 1
+
+#### Hasil: 
+
+Sama seperti soal 8, kami melakukan 10 percobaan untuk tiap jumlah worker (3, 2, dan 1). Lalu, kami buat rata-ratanya yang kemudian kami bandingkan. Berikut adalah graf performa pengaruh jumlah worker:
+
+![9](images/9.jpg)
+
+untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.com/document/d/1KRXqVpzQufx1s8oTjW6fgp6x9LUVNZi1pcKLPr0Z1-o/edit?usp=drive_link">ini</a>**.
+    
+## Soal 10
+
+> Selanjutnya coba tambahkan konfigurasi autentikasi di LB dengan dengan kombinasi username: `netics` dan password: `ajkf04`, dengan yyy merupakan kode kelompok. Terakhir simpan file `htpasswd` nya di `/etc/nginx/rahasisakita/` .
+ 
+<hr style="width:60%; align:center">
+
+Pada Eisen:
+
+1. jalankan `htpasswd -c /etc/nginx/.htpasswd netics` kemudian masukkan password `ajkf04`
+2. jalankan `ab -n 100 -c 10 granz.channel.f04.com/`
+3. matikan worker dengan `service nginx stop` dan ulangi langkah ke-2 untuk jumlah worker 3, 2, dan 1
+
+#### Hasil: 
+
+Sama seperti soal 8, kami melakukan 10 percobaan untuk tiap jumlah worker (3, 2, dan 1). Lalu, kami buat rata-ratanya yang kemudian kami bandingkan. Berikut adalah graf performa pengaruh jumlah worker:
+
+![9](images/9.jpg)
+
+untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.com/document/d/1KRXqVpzQufx1s8oTjW6fgp6x9LUVNZi1pcKLPr0Z1-o/edit?usp=drive_link">ini</a>**.
+    
