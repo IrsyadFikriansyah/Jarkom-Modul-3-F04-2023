@@ -2,7 +2,7 @@
   
 apt-get update > /dev/null
 
-packages=("lsb-release" "ca-certificates" "apt-transport-https" "software-properties-common" "gnupg2" "mariadb-client" "htop" "wget")
+packages=("lsb-release" "ca-certificates" "apt-transport-https" "software-properties-common" "gnupg2" "mariadb-client" "htop" "wget" "nginx")
 
 for package in "${packages[@]}"; do
   # Check if the package is installed
@@ -33,4 +33,5 @@ for package in "${packages[@]}"; do
   fi
 done
 
+rm -rf /etc/apt/sources.list.d/sury-php.list
 apt-get install git -y

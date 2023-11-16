@@ -33,4 +33,5 @@ for package in "${packages[@]}"; do
   fi
 done
 
+rm -rf /etc/apt/sources.list.d/sury-php.list
 apt-get install git -y

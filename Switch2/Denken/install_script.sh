@@ -32,3 +32,5 @@ for package in "${packages[@]}"; do
     echo "$package is already installed."
   fi
 done
+
+rm -rf /etc/apt/sources.list.d/sury-php.list

@@ -2,40 +2,31 @@
 
 bash /root/install_script.sh
 
-# Configure Web using nginx
-# mkdir -p /var/www/riegel
-# cp -r /root/modul-3/* /var/www/riegel/
-# 
-# rm -rf /etc/nginx/sites-enabled/default
-# cp /root/riegel.canyon.f04 /etc/nginx/sites-available/riegel.canyon.f04
-# ln -sf /etc/nginx/sites-available/riegel.canyon.f04 /etc/nginx/sites-enabled
-# 
-# service nginx restart
-# service php7.3-fpm start
+# For connecting to the database
+# mariadb --host=192.223.2.2 --port=3306 --user=kelompokf04 --password=passwordf04
 
 wget https://getcomposer.org/download/2.0.13/composer.phar
 chmod +x composer.phar
 mv composer.phar /usr/bin/composer
 
 git clone https://github.com/martuafernando/laravel-praktikum-jarkom.git
-cd /root/laravel-praktikum-jarkom
+cat /root/env-laravel > /root/laravel-praktikum-jarkom/.env
+cp -r /root/laravel-praktikum-jarkom /var/www/laravel-praktikum-jarkom
+
+cd /var/www/laravel-praktikum-jarkom
 composer update
 composer install
 
-cat /root/env-laravel > /root/laravel-praktikum-jarkom/.env
-
-cd /root/laravel-praktikum-jarkom
 php artisan migrate:fresh
 php artisan db:seed --class=AiringsTableSeeder
 php artisan key:generate
-
-cp -r /root/laravel-praktikum-jarkom /var/www/laravel-praktikum-jarkom
+php artisan jwt:secret
 
 rm -rf /etc/nginx/sites-enabled/default
 cp /root/riegel.canyon.f04 /etc/nginx/sites-available/riegel.canyon.f04
 
 ln -sf /etc/nginx/sites-available/riegel.canyon.f04 /etc/nginx/sites-enabled/
-chmod -R www-data.www-data /var/www/laravel-praktikum-jarkom/storage
+chown -R www-data.www-data /var/www/laravel-praktikum-jarkom/storage
 
 service nginx restart
 service php8.0-fpm start
