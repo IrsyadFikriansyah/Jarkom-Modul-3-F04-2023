@@ -11,4 +11,4 @@ cp /root/riegel.canyon.f04 /etc/nginx/sites-available/riegel.canyon.f04
 ln -sf /etc/nginx/sites-available/riegel.canyon.f04 /etc/nginx/sites-enabled
 
 service nginx restart
-service php7.3-fpm start
+service php8.3-fpm start
