@@ -14,6 +14,10 @@ server {
 	listen 80;
 	server_name granz.channel.f04.com;
 
+	location /its {
+		return 301 https://www.its.ac.id/;
+	}
+
 	location / {
 		auth_basic "Restricted Access";
         auth_basic_user_file /etc/nginx/rahasisakita/.htpasswd;
@@ -27,6 +31,10 @@ server {
 server {
 	listen 80;
 	server_name riegel.canyon.f04.com;
+
+	location /its {
+		return 301 https://www.its.ac.id/;
+	}
 
 	location / {
 		proxy_pass http://riegel/;
