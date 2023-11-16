@@ -2,7 +2,7 @@
   
 apt-get update > /dev/null
 
-packages=("lsb-release" "ca-certificates" "apt-transport-https" "software-properties-common" "gnupg2" "mariadb-client" "htop" "wget")
+packages=("lsb-release" "ca-certificates" "apt-transport-https" "software-properties-common" "gnupg2" "mariadb-client" "htop" "wget" "nginx")
 
 for package in "${packages[@]}"; do
   # Check if the package is installed
