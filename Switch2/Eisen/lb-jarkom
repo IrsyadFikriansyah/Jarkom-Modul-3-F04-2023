@@ -14,6 +14,13 @@ server {
 	listen 80;
 	server_name granz.channel.f04.com;
 
+	# Allow only specific IP addresses
+	allow 192.223.3.69; 
+	allow 192.223.3.70; 
+	allow 192.223.4.167;
+	allow 192.223.4.168;
+	deny all;
+
 	location /its {
 		return 301 https://www.its.ac.id/;
 	}
@@ -31,6 +38,13 @@ server {
 server {
 	listen 80;
 	server_name riegel.canyon.f04.com;
+
+	# Allow only specific IP addresses
+	allow 192.223.3.69; 
+	allow 192.223.3.70; 
+	allow 192.223.4.167;
+	allow 192.223.4.168;
+	deny all;
 
 	location /its {
 		return 301 https://www.its.ac.id/;
