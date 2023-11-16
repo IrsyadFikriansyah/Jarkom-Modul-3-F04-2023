@@ -32,3 +32,5 @@ for package in "${packages[@]}"; do
     echo "$package is already installed."
   fi
 done
+
+apt-get install git -y

@@ -19,6 +19,8 @@ echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /et
 
 wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -
 
+apt-get update > /dev/null
+
 packages=("php8.0-mbstring" "php8.0-xml" "php8.0-cli" "php8.0-common" "php8.0-intl" "php8.0-opcache" "php8.0-readline" "php8.0-mysql" "php8.0-fpm" "php8.0-curl" "unzip")
 
 for package in "${packages[@]}"; do
