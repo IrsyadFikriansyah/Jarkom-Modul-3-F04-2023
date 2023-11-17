@@ -511,7 +511,7 @@ Pada salah satu client:
 
 #### hasil:
 
-![7](images/7.jpg)
+![7](Images/7.jpg)
     
 ## Soal 8
 
@@ -609,7 +609,7 @@ Pada salah satu client:
 
 Kami melakukan 10 kali percobaan untuk tiap algoritma (Round Robin, Least Connection, IP Hash, Generic Hash). Kemudian dari ke 10 percobaan yang kami lakukan, kami buat rata-rata nya yang kemudian kami bandingkan tiap algoritma. Berikut adalah graf performa tiap algoritma load balancing:
 
-![8](images/8.jpg)
+![8](Images/8.jpg)
 
 untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.com/document/d/1KRXqVpzQufx1s8oTjW6fgp6x9LUVNZi1pcKLPr0Z1-o/edit?usp=drive_link">ini</a>**.
     
@@ -631,7 +631,7 @@ Pada salah satu client:
 
 Sama seperti soal 8, kami melakukan 10 percobaan untuk tiap jumlah worker (3, 2, dan 1). Lalu, kami buat rata-ratanya yang kemudian kami bandingkan. Berikut adalah graf performa pengaruh jumlah worker:
 
-![9](images/9.jpg)
+![9](Images/9.jpg)
 
 untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.com/document/d/1KRXqVpzQufx1s8oTjW6fgp6x9LUVNZi1pcKLPr0Z1-o/edit?usp=drive_link">ini</a>**.
     
@@ -663,7 +663,7 @@ Pada Eisen:
 
 #### Hasil: 
 
-![10](images/10.jpg)
+![10](Images/10.jpg)
     
 ## Soal 11
 
@@ -688,7 +688,7 @@ Pada Eisen:
 
 #### Hasil: 
 
-![11](images/11.jpg)
+![11](Images/11.jpg)
 
 ## Soal 12
 
@@ -716,7 +716,7 @@ Pada Eisen:
 
 #### Hasil: 
 
-![12](images/12.jpg)
+![12](Images/12.jpg)
 
 ## Soal 13 & 14
 
@@ -826,7 +826,7 @@ Untuk setup deploy Laravel menggunakan Nginx:
 
 #### Hasil: 
 
-![13](images/13.jpg)
+![13](Images/13.jpg)
 
 ## Soal 15
 
@@ -851,13 +851,16 @@ Pada salah satu client:
 #### Hasil:
 
 Benchmark:
-![15a](images/15a.jpg)
+
+![15a](Images/15a.jpg)
 
 Response dari request pertama:
-![15b](images/15b.jpg)
+
+![15b](Images/15b.jpg)
 
 Response dari request lain:
-![15c](images/15c.jpg)
+
+![15c](Images/15c.jpg)
 
 Dapat dilihat dari hasil benchmark bahwa hanya satu request yang berhasil. Karena aplikasi laravel yang digunakan tidak memperbolehkan username duplikat atau yang disebut unique, maka hanya request pertama saja yang berhasil. Yang lainnya gagal karena tidak bisa melakukan register.
 
@@ -884,13 +887,16 @@ Pada salah satu client:
 #### Hasil:
 
 Benchmark:
-![16a](images/16a.jpg)
+
+![16a](Images/16a.jpg)
 
 Contoh response yang sukses:
-![16b](images/16b.jpg)
+
+![16b](Images/16b.jpg)
 
 Contoh response yang gagal:
-![16c](images/16c.jpg)
+
+![16c](Images/16c.jpg)
 
 Dari hasil benchmark yang dilakukan, terdapat 37 request yang gagal. Hal ini dikarenakan CPU dari worker tidak mampu untuk memproses banyaknya request yang diberikan. Oleh karena itu response code yang diberikan adalah 429 atau Too Many Requests.
 
@@ -909,18 +915,22 @@ Pada salah satu client:
 #### Hasil:
 
 Benchmark:
-![17a](images/17a.jpg)
+
+![17a](Images/17a.jpg)
 
 Contoh response berhasil:
-![17b](images/17b.jpg)
+
+![17b](Images/17b.jpg)
 
 Contoh response gagal:
-![17c](images/17c.jpg)
+
+![17c](Images/17c.jpg)
 
 Dari hasil benchmark yang dilakukan, terdapat 39 request yang gagal. Hal ini dikarenakan CPU dari worker tidak mampu untuk memproses banyaknya request yang diberikan. Oleh karena itu response code yang diberikan adalah 429 atau Too Many Requests.
 
 Apabila token yang diberikan salah:
-![17d](images/17d.jpg)
+
+![17d](Images/17d.jpg)
 
 ## Soal 18
 
@@ -1028,16 +1038,20 @@ pm.max_Spare_servers = 15
 #### Hasil:
 
 Awal:
-![19a](images/19a.jpg)
+
+![19a](Images/19a.jpg)
 
 Test 1:
-![19b](images/19b.jpg)
+
+![19b](Images/19b.jpg)
 
 Test 2:
-![19c](images/19c.jpg)
+
+![19c](Images/19c.jpg)
 
 Test 3:
-![19d](images/19d.jpg)
+
+![19d](Images/19d.jpg)
 
 ## Soal 20
 
@@ -1068,4 +1082,4 @@ Pada salah satu client:
 
 #### Hasil:
 
-![20](images/20.jpg)
+![20](Images/20.jpg)
