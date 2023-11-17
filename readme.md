@@ -277,8 +277,8 @@ Switch4
 
 1. tambakan `nameserver` pada `/etc/resolv.conf`
 2. install `bind9`
-3. konfigutasi `/etc/bind/named.conf.local`
-4. konfigutasi `/etc/bind/named.conf.options`
+3. konfigurasi `/etc/bind/named.conf.local`
+4. konfigurasi `/etc/bind/named.conf.options`
 5. buat directory baru `/etc/bind/granz`
 6. buat directory baru `/etc/bind/riegel`
 7. buat file config baru `/etc/bind/granz/granz.channel.f04.com`
@@ -357,7 +357,7 @@ Switch4
 
 <hr style="width:60%; align:center">
 
-1. add configuration ip range in `/etc/default/isc-dhcp-server` on `Himmel`
+1. tambahkan konfigurasi range ip pada `/etc/default/isc-dhcp-server` on `Himmel`
 
 * `/etc/default/isc-dhcp-server`:
     ```sh
@@ -405,7 +405,7 @@ Switch4
 
 <hr style="width:60%; align:center">
 
-1. add DNS configuration in `/etc/default/isc-dhcp-server` on `Himmel`
+1. tambahkan konfigurasi DNS pada `/etc/default/isc-dhcp-server` di `Himmel` menuju `Heiter`
 
 * `/etc/default/isc-dhcp-server`:
     ```sh
@@ -509,7 +509,8 @@ Pada salah satu client:
 1. install `apache2-utils`
 2. jalankan `ab -n 1000 -c 100 granz.channel.f04.com/`
 
-* hasil:
+#### hasil:
+
 ![7](images/7.jpg)
     
 ## Soal 8
@@ -521,6 +522,79 @@ Pada salah satu client:
 > d. Analisis 
  
 <hr style="width:60%; align:center">
+
+Sebelum melakukan testing algoritma load balancing, kita perlu meng-setup load balancer terlebih dahulu:
+
+Pada `Eisen`:
+
+1. install `nginx`
+2. hapus directory default `/etc/nginx/sites-enabled/default`
+3. buat file configurasi baru `/etc/nginx/sites-available/lb-jarkom`
+4. link `/etc/nginx/sites-available/lb-jarkom` pada `/etc/nginx/sites-enabled`
+5. jalankan `service nginx restart`
+
+* `/etc/nginx/sites-available/lb-jarkom`:
+    ```sh
+    upstream granz {
+        server 192.223.4.2; # IP Frieren
+        server 192.223.4.3; # IP Flamme
+        server 192.223.4.4; # IP Fern
+    }
+
+    upstream riegel {
+        server 192.223.3.2;	# Lawine
+        server 192.223.3.3;	# Linie
+        server 192.223.3.4;	# Lugner
+    }
+
+    server {
+        listen 80;
+        server_name granz.channel.f04.com;
+
+        # Allow only specific IP addresses
+        allow 192.223.3.69; 
+        allow 192.223.3.70; 
+        allow 192.223.4.167;
+        allow 192.223.4.168;
+        deny all;
+
+        location /its {
+            return 301 https://www.its.ac.id/;
+        }
+
+        location / {
+            auth_basic "Restricted Access";
+            auth_basic_user_file /etc/nginx/rahasisakita/.htpasswd;
+            proxy_pass http://granz/;
+            proxy_set_header    X-Real-IP $remote_addr;
+            proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header    Host $http_host;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name riegel.canyon.f04.com;
+
+        # Allow only specific IP addresses
+        allow 192.223.3.69; 
+        allow 192.223.3.70; 
+        allow 192.223.4.167;
+        allow 192.223.4.168;
+        deny all;
+
+        location /its {
+            return 301 https://www.its.ac.id/;
+        }
+
+        location / {
+            proxy_pass http://riegel/;
+            proxy_set_header    X-Real-IP $remote_addr;
+            proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header    Host $http_host;
+        }
+    }
+    ```
 
 Untuk melakukan testing, kita dapat menggunakan `ApacheBench`. berikut adalah langkah-langkahnya:
 
@@ -551,7 +625,7 @@ Pada salah satu client:
 
 1. install `apache2-utils`
 2. jalankan `ab -n 100 -c 10 granz.channel.f04.com/`
-3. matikan worker dengan `service nginx stop` dan ulangi langkah ke-2 untuk jumlah worker 3, 2, dan 1
+3. matikan worker dengan `service nginx stop` pada worker dan ulangi langkah ke-2 untuk jumlah worker 3, 2, dan 1
 
 #### Hasil: 
 
@@ -569,15 +643,429 @@ untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.c
 
 Pada Eisen:
 
-1. jalankan `htpasswd -c /etc/nginx/.htpasswd netics` kemudian masukkan password `ajkf04`
-2. jalankan `ab -n 100 -c 10 granz.channel.f04.com/`
-3. matikan worker dengan `service nginx stop` dan ulangi langkah ke-2 untuk jumlah worker 3, 2, dan 1
+1. buat directory baru `/etc/nginx/rahasiakita/`
+2. jalankan `htpasswd -c /etc/nginx/rahasiakita/.htpasswd netics` kemudian masukkan password `ajkf04`
+3. tambahkan konfigurasi autorisasi pada `/etc/nginx/sites-available/lb-jarkom`
+4. jalankan `chmod 644 /etc/nginx/rahasisakita/.htpasswd`
+5. jalankan `service nginx restart`
+
+* `/etc/nginx/sites-available/lb-jarkom`:
+    ```sh
+    server {
+        ...
+        location / {
+            auth_basic "Restricted Access";
+            auth_basic_user_file /etc/nginx/rahasisakita/.htpasswd;
+            ...
+        }
+    }
+    ```
 
 #### Hasil: 
 
-Sama seperti soal 8, kami melakukan 10 percobaan untuk tiap jumlah worker (3, 2, dan 1). Lalu, kami buat rata-ratanya yang kemudian kami bandingkan. Berikut adalah graf performa pengaruh jumlah worker:
-
-![9](images/9.jpg)
-
-untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.com/document/d/1KRXqVpzQufx1s8oTjW6fgp6x9LUVNZi1pcKLPr0Z1-o/edit?usp=drive_link">ini</a>**.
+![10](images/10.jpg)
     
+## Soal 11
+
+> Lalu buat untuk setiap request yang mengandung `/its` akan di proxy passing menuju halaman `https://www.its.ac.id`.
+ 
+<hr style="width:60%; align:center">
+
+Pada Eisen:
+
+1. konfigurasi `/etc/nginx/sites-available/lb-jarkom` 
+
+* `/etc/nginx/sites-available/lb-jarkom`:
+    ```sh
+    server {
+        ...
+        location /its {
+            return 301 https://www.its.ac.id/;
+        }
+        ...
+    }
+    ```
+
+#### Hasil: 
+
+![11](images/11.jpg)
+
+## Soal 12
+
+> Selanjutnya LB ini hanya boleh diakses oleh client dengan IP `192.223.3.69`, `192.223.3.70`, `192.223.4.167`, dan `192.223.4.168`.
+ 
+<hr style="width:60%; align:center">
+
+Pada Eisen:
+
+1. konfigurasi `/etc/nginx/sites-available/lb-jarkom` 
+
+* `/etc/nginx/sites-available/lb-jarkom`:
+    ```sh
+    server {
+        ...
+        # Allow only specific IP addresses
+        allow 192.223.3.69; 
+        allow 192.223.3.70; 
+        allow 192.223.4.167;
+        allow 192.223.4.168;
+        deny all;
+        ...
+    }
+    ```
+
+#### Hasil: 
+
+![12](images/12.jpg)
+
+## Soal 13 & 14
+
+> Karena para petualang kehabisan uang, mereka kembali bekerja untuk mengatur `riegel.canyon.f04.com`.
+> 1. Semua data yang diperlukan, diatur pada Denken dan harus dapat diakses oleh `Lawine`, `Linie`, dan `Lugner`. (13)
+> 2. `Lawine`, `Linie`, dan `Lugner` memiliki Riegel Canyon sesuai dengan quest guide berikut. Jangan lupa melakukan instalasi `PHP8.0` dan `Composer` (14)
+
+<hr style="width:60%; align:center">
+
+Pada `Danken`
+
+1. tambakan `nameserver 192.223.1.3 # IP Heiter` pada `/etc/resolv.conf`
+2. install `mariadb-server` dan `php8.0` 
+3. jalankan `service mysql restart`
+4. jalankan file `queries.sql` yang telah disiapkan
+5. konfigurasi `/etc/mysql/my.cnf`
+
+* `queries.sql`:
+    ```sql
+    CREATE USER 'kelompokf04'@'%' IDENTIFIED BY 'passwordf04';
+    CREATE USER 'kelompokf04'@'localhost' IDENTIFIED BY 'passwordf04';
+    CREATE DATABASE dbkelompokf04;
+    GRANT ALL PRIVILEGES ON *.* TO 'kelompokf04'@'%';
+    GRANT ALL PRIVILEGES ON *.* TO 'kelompokf04'@'localhost';
+    FLUSH PRIVILEGES;
+    ```
+
+* `/etc/mysql/my.cnf`:
+    ```sh
+    #
+    # This group is read both both by the client and the server
+    # use it for options that affect everything
+    #
+    [client-server]
+
+    # Import all .cnf files from configuration directory
+    !includedir /etc/mysql/conf.d/
+    !includedir /etc/mysql/mariadb.conf.d/
+
+    [mysqld]
+    skip-networking=0
+    skip-bind-address
+    ```
+
+Pada `Lawine`, `Linie`, dan `Lugner`:
+
+Untuk setup Laravel:
+
+1. install `mariadb-client`, `php8.0`, `git`, dan `composer`
+2. pergi ke directory `/var/www`
+3. lakukan `git clone` project laravel yang terdapat pada soal
+4. pergi ke directory project laravel yang telah di-clone
+5. copy `.env.example` menjadi `.env` dan kemudian konfigurasi
+6. jalankan `composer update` dan `composer install`
+7. jalankan `php artisan migrate:fresh`
+8. jalankan `php artisan db:seed --class=AiringsTableSeeder`
+9. jalankan `php artisan key:generate`
+10. jalankan `php artisan jwt:secret`
+11. jalankan `chown -R www-data.www-data /var/www/laravel-praktikum-jarkom/storage`
+
+* `.env`:
+    ```sh
+    ...
+    DB_CONNECTION=mysql
+    DB_HOST=192.223.2.2
+    DB_PORT=3306
+    DB_DATABASE=dbkelompokf04
+    DB_USERNAME=kelompokf04
+    DB_PASSWORD=passwordf04
+    ...
+    ```
+
+Untuk setup deploy Laravel menggunakan Nginx:
+
+1. install `nginx`
+2. hapus directory default `/etc/nginx/sites-enabled/default`
+3. buat file konfigurasi baru `/etc/nginx/sites-available/riegel.canyon.f04`
+4. link `/etc/nginx/sites-available/riegel.canyon.f04` pada `/etc/nginx/sites-enabled/`
+5. jalankan `service nginx restart`
+6. jalankan `service php8.0-fpm start`
+
+* `/etc/nginx/sites-available/riegel.canyon.f04`:
+    ```sh
+    server {
+            listen 80;
+            root /var/www/laravel-praktikum-jarkom/public;
+            index index.html index.htm index.php;
+            server_name riegel.canyon.f04.com;
+
+            location / {
+                    try_files $uri $uri/ /index.php?$query_string;
+            }
+
+            location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php8.0-fpm.sock;
+            }
+
+            location ~ /\.ht {
+                    deny all;
+            }
+
+            error_log /var/log/nginx/riegel_error.log;
+            access_log /var/log/nginx/riegel_access.log;
+    }
+    ```
+
+#### Hasil: 
+
+![13](images/13.jpg)
+
+## Soal 15
+
+> 3. Riegel Canyon memiliki beberapa endpoint yang harus ditesting sebanyak 100 request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire.<br>
+> a. POST /auth/register
+
+<hr style="width:60%; align:center">
+
+Pada salah satu client:
+
+1. buat `register.json` yang memuat akun yang ingin diregister
+2. test menggunakan `ab -n 100 -c 10 -v 4 -p register.json -T application/json http://192.223.3.2/api/auth/register`
+
+* `register.json`:
+    ```js
+    {
+        "username": "kelompokf04",
+        "password": "passwordf04"
+    }
+    ```
+
+#### Hasil:
+
+Benchmark:
+![15a](images/15a.jpg)
+
+Response dari request pertama:
+![15b](images/15b.jpg)
+
+Response dari request lain:
+![15c](images/15c.jpg)
+
+Dapat dilihat dari hasil benchmark bahwa hanya satu request yang berhasil. Karena aplikasi laravel yang digunakan tidak memperbolehkan username duplikat atau yang disebut unique, maka hanya request pertama saja yang berhasil. Yang lainnya gagal karena tidak bisa melakukan register.
+
+## Soal 16
+
+> 3. Riegel Canyon request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire.<br>
+> b. POST /auth/login
+
+<hr style="width:60%; align:center">
+
+Pada salah satu client:
+
+1. buat `register.json` yang memuat akun yang ingin diregister
+2. test menggunakan `ab -n 100 -c 10 -v 4 -p register.json -T application/json http://192.223.3.2/api/auth/login`
+
+* `register.json`:
+    ```js
+    {
+        "username": "kelompokf04",
+        "password": "passwordf04"
+    }
+    ```
+
+#### Hasil:
+
+Benchmark:
+![16a](images/16a.jpg)
+
+Contoh response yang sukses:
+![16b](images/16b.jpg)
+
+Contoh response yang gagal:
+![16c](images/16c.jpg)
+
+Dari hasil benchmark yang dilakukan, terdapat 37 request yang gagal. Hal ini dikarenakan CPU dari worker tidak mampu untuk memproses banyaknya request yang diberikan. Oleh karena itu response code yang diberikan adalah 429 atau Too Many Requests.
+
+## Soal 17
+
+> 3. Riegel Canyon memiliki beberapa endpoint yang harus ditesting sebanyak 100 request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire.<br>
+> c. GET /me
+
+<hr style="width:60%; align:center">
+
+Pada salah satu client:
+
+1. lakukan request login dengan menjalankan `curL -X POST -H "Content-Type: application/json" -d @login.json http://192.223.3.3/api/auth/login`
+2. dengan token yang telah didapatkan, jalankan `ab -n 100 -c 10 -v 4 -H "Authorization: Bearer {token}" http://192.223.3.4/api/me`
+
+#### Hasil:
+
+Benchmark:
+![17a](images/17a.jpg)
+
+Contoh response berhasil:
+![17b](images/17b.jpg)
+
+Contoh response gagal:
+![17c](images/17c.jpg)
+
+Dari hasil benchmark yang dilakukan, terdapat 39 request yang gagal. Hal ini dikarenakan CPU dari worker tidak mampu untuk memproses banyaknya request yang diberikan. Oleh karena itu response code yang diberikan adalah 429 atau Too Many Requests.
+
+Apabila token yang diberikan salah:
+![17d](images/17d.jpg)
+
+## Soal 18
+
+> 4. Untuk memastikan ketiganya bekerja sama secara adil untuk mengatur Riegel Canyon maka implementasikan Proxy Bind pada `Eisen` untuk mengaitkan IP dari `Lawine`, `Linie`, dan `Lugner`.
+
+<hr style="width:60%; align:center">
+
+Pada `Eisen`:
+
+1. konfigurasi `/etc/nginx/sites-available/lb-jarkom`
+2. jalankan `service nginx restart`
+
+* `/etc/nginx/sites-available/lb-jarkom`:
+    ```sh
+    ...
+    upstream riegel {
+        server 192.223.3.2;	# Lawine
+        server 192.223.3.3;	# Linie
+        server 192.223.3.4;	# Lugner
+    }
+    ...
+    server {
+        listen 80;
+        server_name riegel.canyon.f04.com;
+
+        # Allow only specific IP addresses
+        allow 192.223.3.69; 
+        allow 192.223.3.70; 
+        allow 192.223.4.167;
+        allow 192.223.4.168;
+        deny all;
+
+        location /its {
+            return 301 https://www.its.ac.id/;
+        }
+
+        location / {
+            proxy_pass http://riegel/;
+            proxy_set_header    X-Real-IP $remote_addr;
+            proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header    Host $http_host;
+        }
+    }
+    ```
+
+## Soal 19
+
+> Untuk meningkatkan performa dari Worker, coba implementasikan PHP-FPM pada `Lawine`, `Linie`, dan `Lugner`. Untuk testing kinerja naikkan 
+>
+> * pm.max_children
+> * pm.start_servers
+> * pm.min_spare_servers
+> * pm.max_spare_servers
+> 
+> sebanyak tiga percobaan dan lakukan testing sebanyak 100 request dengan 10 request/second kemudian berikan hasil analisisnya pada Grimoire.
+
+<hr style="width:60%; align:center">
+
+Pada `Lawine`, `Linie`, dan `Lugner`:
+
+1. konfigurasi `/etc/php/8.0/fpm/pool.d/www.conf`
+2. jalankan `service php8.0-fpm restart`
+3. ulangi langkah 1-2 diatas untuk kombinasi jumlah `pm.` yang berbeda
+
+* `/etc/php/8.0/fpm/pool.d/www.conf` awal:
+```sh
+...
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers =3
+```
+
+* `/etc/php/8.0/fpm/pool.d/www.conf` test ke-1:
+```sh
+...
+pm = dynamic
+pm.max_children = 10
+pm.start_servers = 5
+pm.min_spare_servers = 2
+pm.max_Spare_servers = 5
+```
+
+* `/etc/php/8.0/fpm/pool.d/www.conf` test ke-2:
+```sh
+...
+pm = dynamic
+pm.max_children = 15
+pm.start_servers = 8
+pm.min_spare_servers = 5
+pm.max_spare_servers = 8
+```
+
+* `/etc/php/8.0/fpm/pool.d/www.conf` test ke-3:
+```sh
+...
+pm = dynamic
+Ipm.max_children = 20
+pm.start_servers = 15
+pm.min_spare_servers = 10
+pm.max_Spare_servers = 15
+```
+
+#### Hasil:
+
+Awal:
+![19a](images/19a.jpg)
+
+Test 1:
+![19b](images/19b.jpg)
+
+Test 2:
+![19c](images/19c.jpg)
+
+Test 3:
+![19d](images/19d.jpg)
+
+## Soal 20
+
+> Nampaknya hanya menggunakan PHP-FPM tidak cukup untuk meningkatkan performa dari worker maka implementasikan Least-Conn pada Eisen. Untuk testing kinerja dari worker tersebut dilakukan sebanyak 100 request dengan 10 request/second
+
+<hr style="width:60%; align:center">
+
+Pada `Eisen`:
+
+1. konfigurasi `/etc/nginx/sites-available/lb-jarkom`
+2. jalankan `service nginx restart`
+
+* ``/etc/nginx/sites-available/lb-jarkom``:
+```sh
+...
+upstream riegel {
+    least_conn;
+	server 192.223.3.2;	# Lawine
+	server 192.223.3.3;	# Linie
+	server 192.223.3.4;	# Lugner
+}
+...
+```
+
+Pada salah satu client:
+
+1. jalankan `ab -n 1000 -c 100 riegel.canyon.f04.com/`
+
+#### Hasil:
+
+![20](images/20.jpg)
