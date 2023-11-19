@@ -275,6 +275,8 @@ Switch4
 
 <hr style="width:60%; align:center">
 
+Pada Heiter:
+
 1. tambakan `nameserver` pada `/etc/resolv.conf`
 2. install `bind9`
 3. konfigurasi `/etc/bind/named.conf.local`
@@ -357,7 +359,9 @@ Switch4
 
 <hr style="width:60%; align:center">
 
-1. tambahkan konfigurasi range ip pada `/etc/default/isc-dhcp-server` on `Himmel`
+Pada Himmel:
+
+1. tambahkan konfigurasi range ip pada `/etc/default/isc-dhcp-server`
 
 * `/etc/default/isc-dhcp-server`:
     ```sh
@@ -381,7 +385,9 @@ Switch4
 
 <hr style="width:60%; align:center">
 
-1. add ip range configuration in `/etc/default/isc-dhcp-server` on `Himmel`
+Pada Himmel:
+
+1. add ip range configuration in `/etc/default/isc-dhcp-server`
 
 * `/etc/default/isc-dhcp-server`:
     ```sh
@@ -405,6 +411,8 @@ Switch4
 
 <hr style="width:60%; align:center">
 
+Pada Himmel:
+
 1. tambahkan konfigurasi DNS pada `/etc/default/isc-dhcp-server` di `Himmel` menuju `Heiter`
 
 * `/etc/default/isc-dhcp-server`:
@@ -424,7 +432,9 @@ Switch4
 
 <hr style="width:60%; align:center">
 
-1. add lease time configuration in `/etc/default/isc-dhcp-server` on `Himmel`
+Pada Himmel
+
+1. add lease time configuration in `/etc/default/isc-dhcp-server`
 
 * `/etc/default/isc-dhcp-server`:
     ```sh
