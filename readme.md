@@ -661,10 +661,18 @@ Pada Eisen:
     }
     ```
 
-#### Hasil: 
+Untuk melihat apakah sudah berhasil atau tidak, pertama-tama akses halaman website dengan command `lynx granz.channel.f04.com`. Setelah itu masukkan username `netics`
 
-![10](Images/10.jpg)
-    
+![10a](Images/10a.png)
+
+Lalu masukkan password `ajkf04`
+
+![10b](Images/10b.png)
+
+Setelah memasukkan kredensial, halaman web pun dapat diakses
+
+![10c](Images/10c.png)  
+
 ## Soal 11
 
 > Lalu buat untuk setiap request yang mengandung `/its` akan di proxy passing menuju halaman `https://www.its.ac.id`.
@@ -686,9 +694,11 @@ Pada Eisen:
     }
     ```
 
-#### Hasil: 
+Apabila kita mengakses `granz.channel.f04.com` atau `riegel.canyon.f04.com` dengan akhiran `/its` maka website akan redirect ke website its
 
-![11](Images/11.jpg)
+![11a](Images/11a.png)
+
+![11b](Images/11b.png)
 
 ## Soal 12
 
@@ -714,9 +724,9 @@ Pada Eisen:
     }
     ```
 
-#### Hasil: 
+Apabila IP yang mengakses website tidak memiliki IP seperti diatas, maka akan menghasilkan error 403 forbidden
 
-![12](Images/12.jpg)
+![12a](Images/12a.png)
 
 ## Soal 13 & 14
 
@@ -824,9 +834,9 @@ Untuk setup deploy Laravel menggunakan Nginx:
     }
     ```
 
-#### Hasil: 
+Berikut adalah isi dari database `MariaDB` setelah dilakukan migrate dan seed
 
-![13](Images/13.jpg)
+![13a](Images/13a.png)
 
 ## Soal 15
 
