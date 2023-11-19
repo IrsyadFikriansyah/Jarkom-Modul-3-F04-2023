@@ -602,7 +602,7 @@ Pada salah satu client:
 
 1. install `apache2-utils`
 2. jalankan `ab -n 200 -c 10 granz.channel.f04.com/`
-3. ubah algoritma lb pada node `Sein` dan ulangi langkah ke-2
+3. ubah algoritma lb pada node `Eisen` dan ulangi langkah ke-2
 4. ulangi langkah ke-3 untuk semua algoritma load balancing
 
 #### Hasil: 
@@ -637,7 +637,7 @@ untuk lebih detailnya dapat diakses pada tautan **<a href="https://docs.google.c
     
 ## Soal 10
 
-> Selanjutnya coba tambahkan konfigurasi autentikasi di LB dengan dengan kombinasi username: `netics` dan password: `ajkf04`, dengan yyy merupakan kode kelompok. Terakhir simpan file `htpasswd` nya di `/etc/nginx/rahasisakita/` .
+> Selanjutnya coba tambahkan konfigurasi autentikasi di LB dengan dengan kombinasi username: `netics` dan password: `ajkf04`, dengan yyy merupakan kode kelompok. Terakhir simpan file `htpasswd` nya di `/etc/nginx/rahasiakita/` .
  
 <hr style="width:60%; align:center">
 
@@ -646,7 +646,7 @@ Pada Eisen:
 1. buat directory baru `/etc/nginx/rahasiakita/`
 2. jalankan `htpasswd -c /etc/nginx/rahasiakita/.htpasswd netics` kemudian masukkan password `ajkf04`
 3. tambahkan konfigurasi autorisasi pada `/etc/nginx/sites-available/lb-jarkom`
-4. jalankan `chmod 644 /etc/nginx/rahasisakita/.htpasswd`
+4. jalankan `chmod 644 /etc/nginx/rahasiakita/.htpasswd`
 5. jalankan `service nginx restart`
 
 * `/etc/nginx/sites-available/lb-jarkom`:
@@ -655,7 +655,7 @@ Pada Eisen:
         ...
         location / {
             auth_basic "Restricted Access";
-            auth_basic_user_file /etc/nginx/rahasisakita/.htpasswd;
+            auth_basic_user_file /etc/nginx/rahasiakita/.htpasswd;
             ...
         }
     }
@@ -739,7 +739,7 @@ Apabila IP yang mengakses website tidak memiliki IP seperti diatas, maka akan me
 Pada `Danken`
 
 1. tambakan `nameserver 192.223.1.3 # IP Heiter` pada `/etc/resolv.conf`
-2. install `mariadb-server` dan `php8.0` 
+2. install `mariadb-server` 
 3. jalankan `service mysql restart`
 4. jalankan file `queries.sql` yang telah disiapkan
 5. konfigurasi `/etc/mysql/my.cnf`
@@ -883,10 +883,10 @@ Dapat dilihat dari hasil benchmark bahwa hanya satu request yang berhasil. Karen
 
 Pada salah satu client:
 
-1. buat `register.json` yang memuat akun yang ingin diregister
-2. test menggunakan `ab -n 100 -c 10 -v 4 -p register.json -T application/json http://192.223.3.2/api/auth/login`
+1. buat `login.json` yang memuat akun yang ingin diregister
+2. test menggunakan `ab -n 100 -c 10 -v 4 -p login.json -T application/json http://192.223.3.3/api/auth/login`
 
-* `register.json`:
+* `login.json`:
     ```js
     {
         "username": "kelompokf04",
@@ -919,7 +919,7 @@ Dari hasil benchmark yang dilakukan, terdapat 37 request yang gagal. Hal ini dik
 
 Pada salah satu client:
 
-1. lakukan request login dengan menjalankan `curL -X POST -H "Content-Type: application/json" -d @login.json http://192.223.3.3/api/auth/login`
+1. lakukan request login dengan menjalankan `curl -X POST -H "Content-Type: application/json" -d @login.json http://192.223.3.3/api/auth/login`
 2. dengan token yang telah didapatkan, jalankan `ab -n 100 -c 10 -v 4 -H "Authorization: Bearer {token}" http://192.223.3.4/api/me`
 
 #### Hasil:
