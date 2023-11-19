@@ -9,6 +9,17 @@
 |----------|-----------|
 | F04      | 192.223   |
 
+## Link
+Untuk grimoire dan file export dapat dilihat disini:
+
+https://its.id/m/Prak3JarkomF04
+
+## Cara Setup GNS dengan script
+- Pertama nyalakan semua node
+- Jalankan `script.sh` pada node Aura terlebih dahulu
+- Lalu jalankan `script.sh` pada node Heiter dan Himmel
+- Setelah itu jalankan `script.sh` pada node-node lain
+
 ## Cara Kami Mengerjakan
 
 <div align=justify>
